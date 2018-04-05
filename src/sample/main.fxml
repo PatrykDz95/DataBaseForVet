@@ -15,29 +15,29 @@
             xmlns:fx="http://javafx.com/fxml" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
     <left>
-        <TableView fx:id="artistTable" prefHeight="-Infinity" prefWidth="500.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="vetTable" prefHeight="-Infinity" prefWidth="500.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn prefWidth="100" text="Animal">
+                <TableColumn fx:id="animalColumn" prefWidth="100" text="Animal">
                     <cellValueFactory>
                         <PropertyValueFactory property="Animal"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn prefWidth="100" text="Name">
+                <TableColumn fx:id="nameColumn" prefWidth="100" text="Name">
                     <cellValueFactory>
                         <PropertyValueFactory property="Name"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn prefWidth="100" text="Breed">
+                <TableColumn fx:id="breedColumn" prefWidth="100" text="Breed">
                     <cellValueFactory>
                         <PropertyValueFactory property="Breed"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn prefWidth="100" text="Years">
+                <TableColumn fx:id="yearsColumn" prefWidth="100" text="Years">
                     <cellValueFactory>
                         <PropertyValueFactory property="Years"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn prefWidth="100" text="Owner">
+                <TableColumn fx:id="ownerColumn" prefWidth="100" text="Owner">
                     <cellValueFactory>
                         <PropertyValueFactory property="Owner"/>
                     </cellValueFactory>

@@ -13,9 +13,7 @@ public class Animals {
     private SimpleStringProperty owner;
 
 
-    public Animals(SimpleIntegerProperty id, SimpleStringProperty animal,
-                   SimpleStringProperty name, SimpleStringProperty breed,
-                   SimpleIntegerProperty years, SimpleStringProperty owner) {
+    public Animals(){
         this.id = new SimpleIntegerProperty();
         this.animal = new SimpleStringProperty();
         this.name = new SimpleStringProperty();
