@@ -44,7 +44,7 @@ public class Database {
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
 
-    public static final String QUERY_ANIMAL = "SELECT animal FROM " + TABLE_VETDATABASE;
+    public static final String QUERY_ANIMAL = "SELECT " + COLUMN_ANIMAL + " FROM " + TABLE_VETDATABASE;
 
     private Connection connection;
 
