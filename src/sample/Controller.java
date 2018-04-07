@@ -8,10 +8,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 
-import static sample.Database.CONNECTION_STRING;
-import static sample.Database.QUERY_VETDATABASE;
+import static sample.Database.*;
 
 public class Controller {
 
@@ -29,27 +29,22 @@ public class Controller {
     private TableColumn ownerColumn;
 
     private Connection connection;
+
     @FXML
-    public void listAnimals() {
+    public void listAnimals(){
         Task<ObservableList<Animals>> task = new GetAllArtistsTask();
         vetTable.itemsProperty().bind(task.valueProperty());
-      //  animalColumn.cellFactoryProperty().bind(Database.getInstance().cos());
-//        nameColumn.cellFactoryProperty().bind(task.valueProperty());
-//        breedColumn.cellFactoryProperty().bind(task.valueProperty());
-//        yearsColumn.cellFactoryProperty().bind(task.valueProperty());
-//        ownerColumn.cellFactoryProperty().bind(task.valueProperty());
+       // animalColumn.setCellValueFactory(Database.getInstance());
         new Thread(task).start();
-//
-//        animalColumn.setCellFactory( new PropertyValueFactory<Animals,String>
-//                (Database.getInstance().COLUMN_ANIMAL));
 
     }
+
 
     class GetAllArtistsTask extends Task{
         @Override
         protected ObservableList<Animals> call() {
             return FXCollections.observableArrayList(
-                    Database.getInstance().queryAnimals(Database.ORDER_BY_ASC));
+                    Database.getInstance().queryAnimal());
 
         }
     }

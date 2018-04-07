@@ -1,5 +1,14 @@
 package sample;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +49,23 @@ public class Database {
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
 
+    public static final String QUERY_ANIMAL = "SELECT animal FROM " + TABLE_VETDATABASE;
+
     private Connection connection;
+    private ObservableList<ObservableList> data;
 
-
+    @FXML
+    private TableView vetTable;
+    @FXML
+    private TableColumn animalColumn;
+    @FXML
+    private TableColumn nameColumn;
+    @FXML
+    private TableColumn breedColumn;
+    @FXML
+    private TableColumn yearsColumn;
+    @FXML
+    private TableColumn ownerColumn;
 
     public boolean open() {
         try {
@@ -61,42 +84,32 @@ public class Database {
             if (connection != null) {
                 connection.close();
             }
+
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
         }
     }
 
-    public List<Animals> queryAnimals(int sortOrder) {
+    public List<Animals> queryAnimal(){
 
-        StringBuilder sb = new StringBuilder("SELECT * FROM ");
-        sb.append(TABLE_VETDATABASE);
-        if (sortOrder != ORDER_BY_NONE) {
-            sb.append(" ORDER BY ");
-            sb.append(COLUMN_ANIMAL);
-            sb.append(" COLLATE NOCASE ");
-            if (sortOrder == ORDER_BY_DESC) {
-                sb.append("DESC");
-            } else {
-                sb.append("ASC");
-            }
-        }
+
+
         try(Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(sb.toString())){
+            ResultSet result = statement.executeQuery("SELECT * FROM " + TABLE_VETDATABASE)){
 
-            List<Animals> artists = new ArrayList<>();
+            List<Animals> animals = new ArrayList<>();
             while(result.next()){
-                try{
-                    Thread.sleep(20);
-                }catch (InterruptedException e){
-                    System.out.println("Ups");
-                }
-                Animals artist = new Animals();
-                artist.setId(result.getInt(INDEX_VETDATABASE_ID));
-                artist.setName(result.getString(INDEX_VETDATABASE_NAME));
-                artists.add(artist);
+                Animals animal = new Animals();
+                //animal.setId(result.getInt(INDEX_VETDATABASE_ID));
+                animal.setAnimal(result.getString(INDEX_VETDATABASE_ANIMAL));
+                animal.setName(result.getString(INDEX_VETDATABASE_NAME));
+                animal.setBreed(result.getString(INDEX_VETDATABASE_BREED));
+                animal.setYears(result.getInt(INDEX_VETDATABASE_YEARS));
+                animal.setOwner(result.getString(INDEX_VETDATABASE_OWNER));
+                animals.add(animal);
             }
 
-            return artists;
+            return animals;
 
         }catch (SQLException e){
             System.out.println("Query failed: " + e.getMessage());
@@ -105,6 +118,8 @@ public class Database {
 
     }
 
+    }
 
-}
+
+
 
