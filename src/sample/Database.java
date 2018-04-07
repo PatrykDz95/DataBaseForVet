@@ -40,11 +40,6 @@ public class Database {
     public static final int INDEX_VETDATABASE_YEARS = 5;
     public static final int INDEX_VETDATABASE_OWNER = 6;
 
-    public static final int ORDER_BY_NONE = 1;
-    public static final int ORDER_BY_ASC = 2; // sorts the result set in ascending order by expression
-    public static final int ORDER_BY_DESC = 3; // sorts the result set in descending order by expression.
-
-
     public static final String QUERY_VETDATABASE = "SELECT * FROM " +
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
@@ -52,20 +47,6 @@ public class Database {
     public static final String QUERY_ANIMAL = "SELECT animal FROM " + TABLE_VETDATABASE;
 
     private Connection connection;
-    private ObservableList<ObservableList> data;
-
-    @FXML
-    private TableView vetTable;
-    @FXML
-    private TableColumn animalColumn;
-    @FXML
-    private TableColumn nameColumn;
-    @FXML
-    private TableColumn breedColumn;
-    @FXML
-    private TableColumn yearsColumn;
-    @FXML
-    private TableColumn ownerColumn;
 
     public boolean open() {
         try {
@@ -80,7 +61,6 @@ public class Database {
 
     public void close() {
         try {
-
             if (connection != null) {
                 connection.close();
             }
@@ -92,15 +72,12 @@ public class Database {
 
     public List<Animals> queryAnimal(){
 
-
-
         try(Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM " + TABLE_VETDATABASE)){
 
             List<Animals> animals = new ArrayList<>();
             while(result.next()){
                 Animals animal = new Animals();
-                //animal.setId(result.getInt(INDEX_VETDATABASE_ID));
                 animal.setAnimal(result.getString(INDEX_VETDATABASE_ANIMAL));
                 animal.setName(result.getString(INDEX_VETDATABASE_NAME));
                 animal.setBreed(result.getString(INDEX_VETDATABASE_BREED));
@@ -117,7 +94,6 @@ public class Database {
         }
 
     }
-
     }
 
 

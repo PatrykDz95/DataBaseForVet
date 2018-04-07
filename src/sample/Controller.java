@@ -6,12 +6,6 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import javax.xml.crypto.Data;
-import java.sql.*;
-
-import static sample.Database.*;
 
 public class Controller {
 
@@ -28,17 +22,12 @@ public class Controller {
     @FXML
     private TableColumn ownerColumn;
 
-    private Connection connection;
-
     @FXML
     public void listAnimals(){
         Task<ObservableList<Animals>> task = new GetAllArtistsTask();
         vetTable.itemsProperty().bind(task.valueProperty());
-       // animalColumn.setCellValueFactory(Database.getInstance());
         new Thread(task).start();
-
     }
-
 
     class GetAllArtistsTask extends Task{
         @Override
@@ -48,7 +37,6 @@ public class Controller {
 
         }
     }
-
 
 
 }
