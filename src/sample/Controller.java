@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.util.Scanner;
+
 public class Controller {
 
     @FXML
@@ -29,14 +31,32 @@ public class Controller {
         new Thread(task).start();
     }
 
-    class GetAllArtistsTask extends Task{
-        @Override
-        protected ObservableList<Animals> call() {
-            return FXCollections.observableArrayList(
-                    Database.getInstance().queryAnimal());
+    @FXML
+    public void updateAnimal(){
+        final Animals animal = (Animals) vetTable.getSelectionModel().getSelectedItem();
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return Database.getInstance().updateAnimalName(animal.getId(), "AC/DC");
+            }
+        };
 
-        }
+        task.setOnSucceeded(e -> {
+            if(task.valueProperty().get()){
+                animal.setName("AC/DC");
+                vetTable.refresh();
+            }
+        });
+        new Thread(task).start();
     }
 
+}
 
+class GetAllArtistsTask extends Task{
+    @Override
+    protected ObservableList<Animals> call() {
+        return FXCollections.observableArrayList(
+                Database.getInstance().queryAnimal());
+
+    }
 }

@@ -1,14 +1,5 @@
 package sample;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.util.Callback;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +17,7 @@ public class Database {
     public static final String DB_NAME = "VetDatabase.db";
     public static final String CONNECTION_STRING = "jdbc:sqlite:" + DB_NAME;
     public static final String TABLE_VETDATABASE = "vetdatabase";
-    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_ANIMAL_ID = "_id";
     public static final String COLUMN_ANIMAL = "animal";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_BREED = "breed";
@@ -40,6 +31,9 @@ public class Database {
     public static final int INDEX_VETDATABASE_YEARS = 5;
     public static final int INDEX_VETDATABASE_OWNER = 6;
 
+    public static final String UPDATE_ANIMAL_NAME = "UPDATE " + TABLE_VETDATABASE + " SET " +
+            COLUMN_ANIMAL + " = ? WHERE " + COLUMN_ANIMAL_ID + " = ?";
+
     public static final String QUERY_VETDATABASE = "SELECT * FROM " +
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
@@ -48,9 +42,12 @@ public class Database {
 
     private Connection connection;
 
+    private PreparedStatement updateAnimalName;
+
     public boolean open() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
+            updateAnimalName = connection.prepareStatement(UPDATE_ANIMAL_NAME);
             return true;
 
         } catch (SQLException e) {
@@ -61,6 +58,10 @@ public class Database {
 
     public void close() {
         try {
+            if (updateAnimalName != null) {
+                updateAnimalName.close();
+            }
+
             if (connection != null) {
                 connection.close();
             }
@@ -78,6 +79,7 @@ public class Database {
             List<Animals> animals = new ArrayList<>();
             while(result.next()){
                 Animals animal = new Animals();
+                animal.setId(result.getInt(INDEX_VETDATABASE_ID));
                 animal.setAnimal(result.getString(INDEX_VETDATABASE_ANIMAL));
                 animal.setName(result.getString(INDEX_VETDATABASE_NAME));
                 animal.setBreed(result.getString(INDEX_VETDATABASE_BREED));
@@ -94,6 +96,21 @@ public class Database {
         }
 
     }
+
+    public boolean updateAnimalName(int id, String newName){
+        try{
+            updateAnimalName.setInt(INDEX_VETDATABASE_ID, id);
+            updateAnimalName.setString(INDEX_VETDATABASE_NAME, newName);
+            int affectedRecords = updateAnimalName.executeUpdate();
+
+            return affectedRecords == 1; //return if one record is selected and updated
+
+        }catch (SQLException e){
+            System.out.println("Update failed: " + e.getMessage());
+            return false;
+        }
+    }
+
     }
 
 
