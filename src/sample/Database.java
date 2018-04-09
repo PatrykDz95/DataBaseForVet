@@ -31,8 +31,12 @@ public class Database {
     public static final int INDEX_VETDATABASE_YEARS = 5;
     public static final int INDEX_VETDATABASE_OWNER = 6;
 
+    public static final int ORDER_BY_NONE=1;
+    public static final int ORDER_BY_ASC = 2; // sorts the result set in ascending order by expression
+    public static final int ORDER_BY_DESC = 3; // sorts the result set in descending order by expression.
+
     public static final String UPDATE_ANIMAL_NAME = "UPDATE " + TABLE_VETDATABASE + " SET " +
-            COLUMN_ANIMAL + " = ? WHERE " + COLUMN_ANIMAL_ID + " = ?";
+            COLUMN_NAME + " = ? WHERE " + COLUMN_ANIMAL_ID + " = ?";
 
     public static final String QUERY_VETDATABASE = "SELECT * FROM " +
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
@@ -71,7 +75,7 @@ public class Database {
         }
     }
 
-    public List<Animals> queryAnimal(){
+    public List<Animals> queryAnimal(int orderByAsc){
 
         try(Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM " + TABLE_VETDATABASE)){
@@ -99,8 +103,10 @@ public class Database {
 
     public boolean updateAnimalName(int id, String newName){
         try{
-            updateAnimalName.setInt(INDEX_VETDATABASE_ID, id);
-            updateAnimalName.setString(INDEX_VETDATABASE_NAME, newName);
+            //parameterIndex = the '=?' int the psfs UPDATE_ANIMAL_NAME
+            updateAnimalName.setString(1, newName);
+            updateAnimalName.setInt(2, id);
+
             int affectedRecords = updateAnimalName.executeUpdate();
 
             return affectedRecords == 1; //return if one record is selected and updated

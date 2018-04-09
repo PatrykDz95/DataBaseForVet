@@ -23,9 +23,11 @@ public class Controller {
     private TableColumn yearsColumn;
     @FXML
     private TableColumn ownerColumn;
-
+    Scanner scanner = new Scanner(System.in);
+    String cos = scanner.nextLine();
     @FXML
     public void listAnimals(){
+
         Task<ObservableList<Animals>> task = new GetAllArtistsTask();
         vetTable.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
@@ -37,13 +39,13 @@ public class Controller {
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                return Database.getInstance().updateAnimalName(animal.getId(), "AC/DC");
+                return Database.getInstance().updateAnimalName(animal.getId(), cos);
             }
         };
 
         task.setOnSucceeded(e -> {
             if(task.valueProperty().get()){
-                animal.setName("AC/DC");
+                animal.setName(cos);
                 vetTable.refresh();
             }
         });
@@ -56,7 +58,6 @@ class GetAllArtistsTask extends Task{
     @Override
     protected ObservableList<Animals> call() {
         return FXCollections.observableArrayList(
-                Database.getInstance().queryAnimal());
-
+                Database.getInstance().queryAnimal(Database.ORDER_BY_ASC));
     }
 }
