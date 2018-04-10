@@ -55,7 +55,7 @@
         <HBox alignment="BOTTOM_RIGHT"  prefHeight="100.0" prefWidth="350.00" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
                 <Button onAction="#listAnimals" maxWidth="Infinity" mnemonicParsing="false" text="Load animals" />
-                <Button  maxWidth="Infinity" mnemonicParsing="false" text="Delete Animal" />
+                <Button onAction="#deleteAnimalRow" maxWidth="Infinity" mnemonicParsing="false" text="Delete Animal" />
                 <Button onAction="#updateAnimal" maxWidth="Infinity" mnemonicParsing="false" text="Update Animal" />
             </children>
             <BorderPane.margin>

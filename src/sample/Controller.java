@@ -4,9 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import javax.xml.crypto.Data;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Controller {
@@ -52,12 +56,44 @@ public class Controller {
         new Thread(task).start();
     }
 
+    @FXML
+    public void deleteAnimalRow() {
+        try {
+            final Animals animal = (Animals) vetTable.getSelectionModel().getSelectedItem();            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete");
+            alert.setHeaderText("Want to delete " + ((Animals) vetTable.getSelectionModel().getSelectedItem()).getName());
+            alert.setContentText("Are you sure? Click OK to confirm, or cancel to Back out.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && (result.get() == ButtonType.OK)) {
+                Task<Boolean> task = new Task<>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                       return Database.getInstance().deleteAnimal(animal.getName());
+                    }
+                };
+
+//                task.setOnSucceeded(e -> {
+//                    if(task.valueProperty().get()){
+//                        vetTable.refresh();
+//                    }
+//                });
+                new Thread(task).start();
+            }
+        } catch (Exception e) {
+            Alert NotChosenPerson = new Alert(Alert.AlertType.ERROR);
+            NotChosenPerson.setHeaderText("You must first select a person to delete");
+            Optional<ButtonType> smallAlert = NotChosenPerson.showAndWait();
+
+
+        }
+    }
+
 }
 
 class GetAllArtistsTask extends Task{
     @Override
     protected ObservableList<Animals> call() {
         return FXCollections.observableArrayList(
-                Database.getInstance().queryAnimal(Database.ORDER_BY_ASC));
+                Database.getInstance().queryAnimal());
     }
 }

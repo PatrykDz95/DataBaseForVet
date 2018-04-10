@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ public class Database {
     public static final String TABLE_VETDATABASE = "vetdatabase";
     public static final String COLUMN_ANIMAL_ID = "_id";
     public static final String COLUMN_ANIMAL = "animal";
-    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_ANIMAL_NAME = "name";
     public static final String COLUMN_BREED = "breed";
     public static final String COLUMN_YEARS = "years";
     public static final String COLUMN_OWNER = "owner";
@@ -36,22 +38,27 @@ public class Database {
     public static final int ORDER_BY_DESC = 3; // sorts the result set in descending order by expression.
 
     public static final String UPDATE_ANIMAL_NAME = "UPDATE " + TABLE_VETDATABASE + " SET " +
-            COLUMN_NAME + " = ? WHERE " + COLUMN_ANIMAL_ID + " = ?";
+            COLUMN_ANIMAL_NAME + " = ? WHERE " + COLUMN_ANIMAL_ID + " = ?";
 
     public static final String QUERY_VETDATABASE = "SELECT * FROM " +
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
 
+    public static final String DELETE_ANIMAL_ROW = "SELECT * FROM " + TABLE_VETDATABASE +
+            " WHERE " + COLUMN_ANIMAL_NAME +" =?";
+
     public static final String QUERY_ANIMAL = "SELECT " + COLUMN_ANIMAL + " FROM " + TABLE_VETDATABASE;
 
     private Connection connection;
-
+    private ObservableList<Animals> data;
     private PreparedStatement updateAnimalName;
+    private PreparedStatement deleteAnimal;
 
     public boolean open() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             updateAnimalName = connection.prepareStatement(UPDATE_ANIMAL_NAME);
+            deleteAnimal = connection.prepareStatement(DELETE_ANIMAL_ROW);
             return true;
 
         } catch (SQLException e) {
@@ -65,6 +72,9 @@ public class Database {
             if (updateAnimalName != null) {
                 updateAnimalName.close();
             }
+            if (deleteAnimal != null) {
+                deleteAnimal.close();
+            }
 
             if (connection != null) {
                 connection.close();
@@ -75,7 +85,7 @@ public class Database {
         }
     }
 
-    public List<Animals> queryAnimal(int orderByAsc){
+    public List<Animals> queryAnimal(){
 
         try(Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM " + TABLE_VETDATABASE)){
@@ -116,6 +126,18 @@ public class Database {
             return false;
         }
     }
+
+    public Boolean deleteAnimal(String Name){
+        try {
+            deleteAnimal.setString(1, Name);
+
+        }catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+        //data.remove(animals);
+        return null;
+    }
+
 
     }
 
