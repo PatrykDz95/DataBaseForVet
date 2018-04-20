@@ -1,16 +1,20 @@
 package sample;
 
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import javax.xml.crypto.Data;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Controller {
@@ -27,8 +31,20 @@ public class Controller {
     private TableColumn yearsColumn;
     @FXML
     private TableColumn ownerColumn;
-    Scanner scanner = new Scanner(System.in);
-    String cos = scanner.nextLine();
+    @FXML
+    private PieChart pieChart;
+
+    @FXML
+    public void PieChart(){
+        ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
+        PieChart.Data zwierze = new PieChart.Data("pies", 50);
+
+        list.add(zwierze);
+
+        pieChart.setData(list);
+
+    }
+
     @FXML
     public void listAnimals(){
 
@@ -43,13 +59,13 @@ public class Controller {
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                return Database.getInstance().updateAnimalName(animal.getId(), cos);
+                return Database.getInstance().updateAnimalName(animal.getId(), "COS");
             }
         };
 
         task.setOnSucceeded(e -> {
             if(task.valueProperty().get()){
-                animal.setName(cos);
+                animal.setName("COS");
                 vetTable.refresh();
             }
         });
@@ -59,7 +75,8 @@ public class Controller {
     @FXML
     public void deleteAnimalRow() {
         try {
-            final Animals animal = (Animals) vetTable.getSelectionModel().getSelectedItem();            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            final Animals animal = (Animals) vetTable.getSelectionModel().getSelectedItem();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete");
             alert.setHeaderText("Want to delete " + ((Animals) vetTable.getSelectionModel().getSelectedItem()).getName());
             alert.setContentText("Are you sure? Click OK to confirm, or cancel to Back out.");

@@ -2,12 +2,21 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
+
+//    @FXML
+//    private PieChart pieChart;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -15,6 +24,7 @@ public class Main extends Application {
         primaryStage.setTitle("Vet DataBase");
         primaryStage.setScene(new Scene(root, 950, 500));
         primaryStage.show();
+
     }
 
     @Override
