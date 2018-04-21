@@ -34,13 +34,18 @@ public class Controller {
     @FXML
     private PieChart pieChart;
 
+
+
     @FXML
     public void PieChart(){
+        Database.getInstance().countAnimals("Pies");
+        // int animalCount = Integer.parseInt();
         ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
-        PieChart.Data zwierze = new PieChart.Data("pies", 50);
+
+        PieChart.Data zwierze = new PieChart.Data(Database.getInstance().COLUMN_ANIMAL_NAME, animalCount);
 
         list.add(zwierze);
-
+      //  Database.getInstance().queryAnimal().
         pieChart.setData(list);
 
     }

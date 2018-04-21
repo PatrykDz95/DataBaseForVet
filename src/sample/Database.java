@@ -1,9 +1,13 @@
 package sample;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Database {
@@ -49,16 +53,26 @@ public class Database {
 
     public static final String QUERY_ANIMAL = "SELECT " + COLUMN_ANIMAL + " FROM " + TABLE_VETDATABASE;
 
+    public static final String ANIMAL_COUNT = "SELECT COUNT(" + COLUMN_ANIMAL + ") FROM " + TABLE_VETDATABASE + " WHERE " + COLUMN_ANIMAL + " =?";
+    public int animalCount = Integer.parseInt(ANIMAL_COUNT);
+
     private Connection connection;
     private ObservableList<Animals> data;
     private PreparedStatement updateAnimalName;
     private PreparedStatement deleteAnimal;
+    private PreparedStatement countAnimals;
+
+//    @FXML
+//    private PieChart pieChart;
+
 
     public boolean open() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             updateAnimalName = connection.prepareStatement(UPDATE_ANIMAL_NAME);
             deleteAnimal = connection.prepareStatement(DELETE_ANIMAL_ROW);
+            countAnimals = connection.prepareStatement(ANIMAL_COUNT);
+
             return true;
 
         } catch (SQLException e) {
@@ -75,7 +89,9 @@ public class Database {
             if (deleteAnimal != null) {
                 deleteAnimal.close();
             }
-
+            if (countAnimals != null) {
+                countAnimals.close();
+            }
             if (connection != null) {
                 connection.close();
             }
@@ -84,6 +100,7 @@ public class Database {
             System.out.println("Couldn't connect to database: " + e.getMessage());
         }
     }
+
 
     public List<Animals> queryAnimal(){
 
@@ -111,6 +128,27 @@ public class Database {
 
     }
 
+    public int countAnimals(String Name){
+        try(Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(ANIMAL_COUNT)){
+
+            HashMap<String, Integer> map = new HashMap<>();
+            while(result.next()) {
+                if (map.containsKey(COLUMN_ANIMAL_NAME)) {
+                    continue;
+                } else {
+                   // countAnimals.setString(1, Name);
+                    map.put(COLUMN_ANIMAL_NAME, countAnimals(COLUMN_ANIMAL_NAME));
+                }
+            }
+
+
+        }catch (SQLException e){
+            System.out.println("Update failed: " + e.getMessage());
+        }
+        return countAnimals(COLUMN_ANIMAL_NAME);
+    }
+
     public boolean updateAnimalName(int id, String newName){
         try{
             //parameterIndex = the '=?' int the psfs UPDATE_ANIMAL_NAME
@@ -127,15 +165,16 @@ public class Database {
         }
     }
 
-    public Boolean deleteAnimal(String Name){
+    public boolean deleteAnimal(String Name){
         try {
             deleteAnimal.setString(1, Name);
 
         }catch (SQLException e){
             System.out.println("Something went wrong: " + e.getMessage());
+            return false;
         }
-        //data.remove(animals);
-        return null;
+
+        return data.remove(Name);
     }
 
 
