@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    Controller controller = new Controller();
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
@@ -30,6 +31,7 @@ public class Main extends Application {
             System.out.println("FATAL ERROR: Couldn't connect to database!");
             Platform.exit();
            }
+//           controller.pieChart.setData(Database.getInstance().piechartdata);
     }
 
     @Override

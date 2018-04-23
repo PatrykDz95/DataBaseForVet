@@ -13,9 +13,12 @@ import javafx.scene.control.TableView;
 
 import javax.xml.crypto.Data;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+
+import static sample.Database.ANIMAL_COUNT;
 
 public class Controller {
 
@@ -32,23 +35,49 @@ public class Controller {
     @FXML
     private TableColumn ownerColumn;
     @FXML
-    private PieChart pieChart;
+    public PieChart pieChart;
+
 
 
 
     @FXML
     public void PieChart(){
-        Database.getInstance().countAnimals("Pies");
-        // int animalCount = Integer.parseInt();
-        ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
-
-        PieChart.Data zwierze = new PieChart.Data(Database.getInstance().COLUMN_ANIMAL_NAME, animalCount);
-
-        list.add(zwierze);
-      //  Database.getInstance().queryAnimal().
-        pieChart.setData(list);
-
+        Database.getInstance().countAnimals();
+//        piechartdata=FXCollections.observableArrayList();
+//        try(Statement statement = Database.getInstance().connection.createStatement();
+//            ResultSet result = statement.executeQuery(ANIMAL_COUNT)){
+//            ArrayList<Integer> cell = new ArrayList<>();
+//           // ArrayList<String> animal= new ArrayList<>();
+//
+//            while (result.next()){
+//                piechartdata.add(new PieChart.Data(result.getString(1),2));
+//                cell.add(result.getInt(1));
+//
+//            }
+//
+//        }catch (SQLException e){
+//            System.out.println("Update failed: " + e.getMessage());
+//        }
+//
     }
+   // public void PieChart(){
+//        TableColumn<Animals, String> column = animalColumn ; // column you want
+//
+//        List<String> columnData = new ArrayList<>();
+//        for (String item : vetTable.getItems()) {
+//            columnData.add(column.getCellObservableValue(item).getValue());
+//        }
+//Database.getInstance().countAnimals();
+//      //  int animalCount = Integer.parseInt();
+//        final Animals animal = (Animals) vetTable.getSelectionModel().getSelectedItem();
+      //  ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
+//
+        //PieChart.Data zwierze = new PieChart.Data(animal.getAnimal(), 14);
+//
+//        list.add(zwierze);
+//      //  Database.getInstance().queryAnimal().
+      //  pieChart.setData(animalColumn);
+   // }
 
     @FXML
     public void listAnimals(){

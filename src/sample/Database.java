@@ -54,14 +54,16 @@ public class Database {
     public static final String QUERY_ANIMAL = "SELECT " + COLUMN_ANIMAL + " FROM " + TABLE_VETDATABASE;
 
     public static final String ANIMAL_COUNT = "SELECT COUNT(" + COLUMN_ANIMAL + ") FROM " + TABLE_VETDATABASE + " WHERE " + COLUMN_ANIMAL + " =?";
-    public int animalCount = Integer.parseInt(ANIMAL_COUNT);
+//    public int animalCount = Integer.parseInt(ANIMAL_COUNT);
 
-    private Connection connection;
+    public Connection connection;
     private ObservableList<Animals> data;
     private PreparedStatement updateAnimalName;
     private PreparedStatement deleteAnimal;
     private PreparedStatement countAnimals;
 
+    public ObservableList<PieChart.Data> piechartdata;
+//    private int animalCountInt = Integer.parseInt(ANIMAL_COUNT );
 //    @FXML
 //    private PieChart pieChart;
 
@@ -102,6 +104,25 @@ public class Database {
     }
 
 
+    public void countAnimals(){
+        piechartdata=FXCollections.observableArrayList();
+        try(Statement statement = Database.getInstance().connection.createStatement();
+            ResultSet result = statement.executeQuery(QUERY_VETDATABASE)){
+            ArrayList<Integer> cell = new ArrayList<>();
+            // ArrayList<String> animal= new ArrayList<>();
+
+            while (result.next()){
+                piechartdata.add(new PieChart.Data(result.getString(1),2));
+                cell.add(result.getInt(1));
+
+            }
+
+        }catch (SQLException e){
+            System.out.println("Update failed: " + e.getMessage());
+        }
+
+    }
+
     public List<Animals> queryAnimal(){
 
         try(Statement statement = connection.createStatement();
@@ -128,26 +149,7 @@ public class Database {
 
     }
 
-    public int countAnimals(String Name){
-        try(Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(ANIMAL_COUNT)){
 
-            HashMap<String, Integer> map = new HashMap<>();
-            while(result.next()) {
-                if (map.containsKey(COLUMN_ANIMAL_NAME)) {
-                    continue;
-                } else {
-                   // countAnimals.setString(1, Name);
-                    map.put(COLUMN_ANIMAL_NAME, countAnimals(COLUMN_ANIMAL_NAME));
-                }
-            }
-
-
-        }catch (SQLException e){
-            System.out.println("Update failed: " + e.getMessage());
-        }
-        return countAnimals(COLUMN_ANIMAL_NAME);
-    }
 
     public boolean updateAnimalName(int id, String newName){
         try{
