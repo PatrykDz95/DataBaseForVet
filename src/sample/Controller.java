@@ -116,20 +116,9 @@ public class Controller {
             alert.setContentText("Are you sure? Click OK to confirm, or cancel to Back out.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && (result.get() == ButtonType.OK)) {
-                Task<Boolean> task = new Task<>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                       return Database.getInstance().deleteAnimal(animal.getName());
-                    }
-                };
-
-//                task.setOnSucceeded(e -> {
-//                    if(task.valueProperty().get()){
-//                        vetTable.refresh();
-//                    }
-//                });
-                new Thread(task).start();
+                Database.getInstance().deleteAnimal(((Animals) vetTable.getSelectionModel().getSelectedItem()).getName());
             }
+
         } catch (Exception e) {
             Alert NotChosenPerson = new Alert(Alert.AlertType.ERROR);
             NotChosenPerson.setHeaderText("You must first select a person to delete");

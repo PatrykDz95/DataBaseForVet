@@ -48,13 +48,17 @@ public class Database {
             TABLE_VETDATABASE + " ORDER BY " + TABLE_VETDATABASE + "." +
             COLUMN_ANIMAL + " COLLATE NOCASE ";
 
-    public static final String DELETE_ANIMAL_ROW = "SELECT * FROM " + TABLE_VETDATABASE +
-            " WHERE " + COLUMN_ANIMAL_NAME +" =?";
+//    public static final String DELETE_ANIMAL_ROW = "SELECT * FROM " + TABLE_VETDATABASE +
+//            " WHERE " + COLUMN_ANIMAL_NAME +" =?";
 
     public static final String QUERY_ANIMAL = "SELECT " + COLUMN_ANIMAL + " FROM " + TABLE_VETDATABASE;
 
     public static final String ANIMAL_COUNT = "SELECT COUNT(" + COLUMN_ANIMAL + ") FROM " + TABLE_VETDATABASE + " WHERE " + COLUMN_ANIMAL + " =?";
-//    public int animalCount = Integer.parseInt(ANIMAL_COUNT);
+
+    public static final String DELETE_ROW = "DELETE FROM " + TABLE_VETDATABASE + " WHERE " +
+            COLUMN_ANIMAL_NAME + " =? ";// + " AND " + COLUMN_ANIMAL + " =? " + " AND " + COLUMN_OWNER + " =? ";
+
+
 
     public Connection connection;
     private ObservableList<Animals> data;
@@ -72,8 +76,9 @@ public class Database {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             updateAnimalName = connection.prepareStatement(UPDATE_ANIMAL_NAME);
-            deleteAnimal = connection.prepareStatement(DELETE_ANIMAL_ROW);
+            deleteAnimal = connection.prepareStatement(DELETE_ROW);
             countAnimals = connection.prepareStatement(ANIMAL_COUNT);
+
 
             return true;
 
@@ -112,7 +117,7 @@ public class Database {
             // ArrayList<String> animal= new ArrayList<>();
 
             while (result.next()){
-                piechartdata.add(new PieChart.Data(result.getString(1),2));
+                piechartdata.add(new PieChart.Data(result.getString(""),2));
                 cell.add(result.getInt(1));
 
             }
@@ -167,17 +172,20 @@ public class Database {
         }
     }
 
-    public boolean deleteAnimal(String Name){
-        try {
+    public void deleteAnimal(String Name){
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(DELETE_ROW)){
             deleteAnimal.setString(1, Name);
+          //  deleteAnimal.setString(2, Animal);
+          //  deleteAnimal.setString(3, Owner);
 
+                statement.executeUpdate(DELETE_ROW);
         }catch (SQLException e){
             System.out.println("Something went wrong: " + e.getMessage());
-            return false;
         }
 
-        return data.remove(Name);
     }
+
 
 
     }
